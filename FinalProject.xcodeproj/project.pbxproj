@@ -29,9 +29,35 @@
 		EBAC5DA32D0CE265005823B7 /* FinalProjectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FinalProjectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		EBAC5DCE2D0CE50C005823B7 /* Exceptions for "FinalProject" folder in "FinalProject" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				app.py,
+				Info.plist,
+				TeamMembers.txt,
+			);
+			target = EBAC5D882D0CE262005823B7 /* FinalProject */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		EBAC5DCF2D0CE50C005823B7 /* Exceptions for "FinalProject" folder in "Compile Sources" phase from "FinalProject" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = EBAC5D852D0CE262005823B7 /* Sources */;
+			membershipExceptions = (
+				TeamMembers.txt,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		EBAC5D8B2D0CE262005823B7 /* FinalProject */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				EBAC5DCE2D0CE50C005823B7 /* Exceptions for "FinalProject" folder in "FinalProject" target */,
+				EBAC5DCF2D0CE50C005823B7 /* Exceptions for "FinalProject" folder in "Compile Sources" phase from "FinalProject" target */,
+			);
 			path = FinalProject;
 			sourceTree = "<group>";
 		};
