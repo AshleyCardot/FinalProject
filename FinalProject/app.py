@@ -1,9 +1,4 @@
 #
-//  app.py
-//  FinalProject
-//
-//  Created by Ashley Cardot on 12/13/24.
-//
 
 from flask import Flask, request, jsonify
 from sklearn.model_selection import train_test_split
