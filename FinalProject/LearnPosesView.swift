@@ -1,11 +1,3 @@
-//
-//  LearnPosesView.swift
-//  FinalProject
-//
-//  Created by Ashley Cardot on 12/13/24.
-//
-
-
 import SwiftUI
 import AVKit
 
@@ -14,8 +6,8 @@ struct LearnPosesView: View {
     @State private var player: AVPlayer?
     @State private var isVideoExpanded: Bool = false
     @State private var isDescriptionExpanded: Bool = false
+    @State private var isFullScreen: Bool = false
     @Environment(\.dismiss) private var dismiss
-    
     
     // Dictionary for pose details
     let poseDetails: [String: (text: String, video: String, image: String, level: String)] = [
@@ -36,13 +28,13 @@ struct LearnPosesView: View {
                             .resizable()
                             .scaledToFill()
                             .frame(maxWidth: .infinity, maxHeight: 250)
-                            .clipShape(RoundedRectangle(cornerRadius: 20)) // Rounds the edges
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
                             .clipped()
                         
                         // Circular image overlapping and centered
                         ZStack {
                             Circle()
-                                .fill(Color.white) // Background circle to enhance visibility
+                                .fill(Color.white)
                                 .frame(width: 220, height: 220)
                                 .shadow(radius: 10)
                             
@@ -55,8 +47,8 @@ struct LearnPosesView: View {
                                     Circle().stroke(Color.white, lineWidth: 4)
                                 }
                         }
-                        .offset(y: -110) // Moves the circle up to overlap header
-                        .padding(.bottom, -110) // Avoids extra space below
+                        .offset(y: -110)
+                        .padding(.bottom, -110)
                     }
                     
                     // Pose name and level
@@ -73,12 +65,29 @@ struct LearnPosesView: View {
                     .padding(.top, 16)
                     .multilineTextAlignment(.center)
                     
-                    // Expandable Video Section
+                    // Expandable Video Section with Full Screen Support
                     DisclosureGroup("Video", isExpanded: $isVideoExpanded) {
                         if let player = player {
-                            VideoPlayer(player: player)
-                                .frame(height: 220)
-                                .cornerRadius(12)
+                            ZStack(alignment: .topTrailing) {
+                                VideoPlayer(player: player)
+                                    .frame(height: 220)
+                                    .cornerRadius(12)
+                                
+                                Button {
+                                    isFullScreen = true
+                                } label: {
+                                    Image(systemName: "arrow.up.left.and.arrow.down.right")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(.white)
+                                        .padding(8)
+                                        .background(.ultraThinMaterial)
+                                        .cornerRadius(8)
+                                        .padding(8)
+                                }
+                            }
+                            .sheet(isPresented: $isFullScreen) {
+                                FullScreenVideoPlayer(player: player)
+                            }
                         } else {
                             Text("Loading video...")
                                 .frame(height: 220)
@@ -92,7 +101,7 @@ struct LearnPosesView: View {
                     .cornerRadius(10)
                     .padding(.vertical, 8)
                     
-                    // Expandable Description Section
+                    // Rest of the view remains the same...
                     DisclosureGroup("Description", isExpanded: $isDescriptionExpanded) {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Description:")
@@ -114,7 +123,7 @@ struct LearnPosesView: View {
                     .cornerRadius(10)
                     .padding(.vertical, 8)
                 }
-            } // End of VStack
+            }
             .padding(.horizontal)
         }
         .navigationTitle("Learn")
@@ -127,13 +136,13 @@ struct LearnPosesView: View {
             player = nil
         }
     }
+    
     private func setupVideo() {
         guard let details = poseDetails[selectedPose.name.lowercased()],
               let url = Bundle.main.url(forResource: details.video, withExtension: "mp4") else {
             return
         }
         
-        // Configure audio session
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback)
             try AVAudioSession.sharedInstance().setActive(true)
@@ -141,9 +150,22 @@ struct LearnPosesView: View {
             print("Failed to set audio session category: \(error)")
         }
         
-        // Initialize player
         let newPlayer = AVPlayer(url: url)
         newPlayer.seek(to: .zero)
         self.player = newPlayer
+    }
+}
+
+// New FullScreenVideoPlayer view
+struct FullScreenVideoPlayer: View {
+    let player: AVPlayer
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        VideoPlayer(player: player)
+            .edgesIgnoringSafeArea(.all)
+            .navigationBarItems(trailing: Button("Done") {
+                dismiss()
+            })
     }
 }
