@@ -99,9 +99,11 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 30) {
-                Text("Welcome to Pose Trainer")
+                Text("My YOGI")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .font(.custom("Arial Rounded MT Bold", size: 48))
+                    .foregroundColor(.blue)
                     .multilineTextAlignment(.center)
 
                 NavigationLink(
