@@ -123,7 +123,7 @@ struct ContentView: View {
                 }
 
                 NavigationLink(
-                    destination: PoseLearnView(availablePoses: $availablePoses)
+                    destination: PoseLearnView(availablePoses: availablePoses)
                 ) {
                     HStack {
                         Image(systemName: "figure.mind.and.body")
