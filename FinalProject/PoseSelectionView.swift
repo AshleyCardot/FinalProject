@@ -40,8 +40,8 @@ struct PoseSelectionView: View {
                            let uiImage = UIImage(named: imageName) ?? UIImage(contentsOfFile: Bundle.main.path(forResource: imageName, ofType: "jpg") ?? "") {
                             Image(uiImage: uiImage)
                                 .resizable()
-                                .aspectRatio(16/9, contentMode: .fill)
-                                .frame(height: 200)
+                                .aspectRatio(contentMode: .fill)
+                                .frame(height: 150)
                                 .clipped()
                                 .cornerRadius(8)
                         } else {
