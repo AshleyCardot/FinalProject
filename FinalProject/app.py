@@ -1,5 +1,3 @@
-#
-
 from flask import Flask, request, jsonify
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -9,6 +7,7 @@ import pandas as pd
 import os
 import pickle
 import json
+import numpy as np
 
 app = Flask(__name__)
 
@@ -146,22 +145,33 @@ def predict():
         # Order the features to match the expected order
         ordered_features = []
         for feature in processed_features:
-            ordered_feature = {key: feature.get(key, 0) for key in expected_features}  # Default missing keys to 0
+            ordered_feature = {key: feature.get(key, 0) for key in expected_features}
             ordered_features.append(ordered_feature)
 
-        # Predict the label
+        # Create DataFrame for prediction
         df = pd.DataFrame(ordered_features)
-        predictions = model.predict(df)
-        predicted_pose = predictions[0]  # Assuming single prediction for simplicity
 
-        # Compare with the attempted pose
-        is_correct = predicted_pose.lower() == attempted_pose.lower()
+        # Get prediction probabilities
+        prediction_probs = model.predict_proba(df)
+        max_prob = np.max(prediction_probs[0])
+
+        # Set confidence threshold
+        CONFIDENCE_THRESHOLD = 0.6
+
+        if max_prob < CONFIDENCE_THRESHOLD:
+            predicted_pose = "none"
+            feedback = "Your pose doesn't match any known poses clearly. Please try again."
+        else:
+            predicted_pose = model.predict(df)[0]
+            is_correct = predicted_pose.lower() == attempted_pose.lower()
+            feedback = "Great job!" if is_correct else f"Try adjusting your pose to match {attempted_pose}."
 
         response = {
             "attempted_pose": attempted_pose,
             "predicted_pose": predicted_pose,
-            "is_correct": is_correct,
-            "feedback": "Great job!" if is_correct else f"Try adjusting your pose to match {attempted_pose}."
+            "confidence": float(max_prob),  # Convert numpy float to Python float for JSON serialization
+            "is_correct": predicted_pose.lower() == attempted_pose.lower(),
+            "feedback": feedback
         }
 
         print("Response:", response)
