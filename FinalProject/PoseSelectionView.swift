@@ -1,15 +1,15 @@
-//
-//  PoseSelectionView.swift
-//  FinalProject
-//
-//  Created by William Epperly on 12/14/24.
-//
-
 import Foundation
 import SwiftUI
 
 struct PoseSelectionView: View {
     @Binding var availablePoses: [YogaPose]
+    let mode: ViewMode
+    
+    enum ViewMode {
+        case practice
+        case learn
+        case favorites
+    }
     
     private let poseImages: [String: String] = [
         "downdog": "downdog-preview",
@@ -18,23 +18,33 @@ struct PoseSelectionView: View {
         "tree": "tree-preview",
         "warrior2": "warrior2-preview"
     ]
+    
+    private var displayedPoses: [YogaPose] {
+        mode == .favorites ? availablePoses.filter { $0.isFavorite } : availablePoses
+    }
 
     var body: some View {
         List {
-            ForEach(availablePoses.indices, id: \.self) { index in
-                let pose = availablePoses[index]
-                NavigationLink(destination: LivePoseFeedbackView(selectedPose: pose)) {
+            ForEach(displayedPoses.indices, id: \.self) { index in
+                let pose = displayedPoses[index]
+                // Find the actual index in availablePoses for favoriting
+                let mainIndex = availablePoses.firstIndex(where: { $0.id == pose.id }) ?? index
+                
+                NavigationLink(
+                    destination: mode == .learn ?
+                        AnyView(LearnPosesView(selectedPose: pose)) :
+                        AnyView(LivePoseFeedbackView(selectedPose: pose))
+                ) {
                     VStack(alignment: .leading, spacing: 12) {
                         if let imageName = poseImages[pose.name],
                            let uiImage = UIImage(named: imageName) ?? UIImage(contentsOfFile: Bundle.main.path(forResource: imageName, ofType: "jpg") ?? "") {
                             Image(uiImage: uiImage)
                                 .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(height: 150)
+                                .aspectRatio(16/9, contentMode: .fill)
+                                .frame(height: 200)
                                 .clipped()
                                 .cornerRadius(8)
                         } else {
-                            // Fallback if image loading fails
                             Rectangle()
                                 .fill(Color.gray.opacity(0.2))
                                 .frame(height: 150)
@@ -64,9 +74,8 @@ struct PoseSelectionView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
 
-                            // Favorite button
                             Button(action: {
-                                availablePoses[index].isFavorite.toggle()
+                                availablePoses[mainIndex].isFavorite.toggle()
                             }) {
                                 HStack {
                                     Image(systemName: pose.isFavorite ? "star.fill" : "star")
@@ -85,6 +94,17 @@ struct PoseSelectionView: View {
             }
         }
         .listStyle(InsetGroupedListStyle())
-        .navigationTitle("Select Pose")
+        .navigationTitle(navigationTitle)
+    }
+    
+    private var navigationTitle: String {
+        switch mode {
+        case .practice:
+            return "Practice Poses"
+        case .learn:
+            return "Learn Poses"
+        case .favorites:
+            return "Favorites"
+        }
     }
 }

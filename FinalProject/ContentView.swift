@@ -1,18 +1,10 @@
-//
-//  ContentView 2.swift
-//  FinalProject
-//
-//  Created by Ashley Cardot on 12/13/24.
-//
-
-
 import SwiftUI
 
 struct ContentView: View {
     @State private var availablePoses: [YogaPose] = [
         YogaPose(
             id: UUID(),
-            name: "downdog",  // Exact name as in ML model
+            name: "downdog",
             description: "A pose that stretches and strengthens the entire body",
             difficulty: .beginner,
             instructions: [
@@ -28,7 +20,7 @@ struct ContentView: View {
         ),
         YogaPose(
             id: UUID(),
-            name: "goddess",  // Exact name as in ML model
+            name: "goddess",
             description: "A powerful standing pose that opens the hips",
             difficulty: .intermediate,
             instructions: [
@@ -44,7 +36,7 @@ struct ContentView: View {
         ),
         YogaPose(
             id: UUID(),
-            name: "plank",  // Exact name as in ML model
+            name: "plank",
             description: "A core strengthening pose that builds stability",
             difficulty: .beginner,
             instructions: [
@@ -60,7 +52,7 @@ struct ContentView: View {
         ),
         YogaPose(
             id: UUID(),
-            name: "tree",  // Exact name as in ML model
+            name: "tree",
             description: "A balancing pose that improves focus and stability",
             difficulty: .beginner,
             instructions: [
@@ -76,7 +68,7 @@ struct ContentView: View {
         ),
         YogaPose(
             id: UUID(),
-            name: "warrior2",  // Exact name as in ML model
+            name: "warrior2",
             description: "A standing pose that builds strength and stability",
             difficulty: .beginner,
             instructions: [
@@ -107,7 +99,7 @@ struct ContentView: View {
                     .multilineTextAlignment(.center)
 
                 NavigationLink(
-                    destination: PoseSelectionView(availablePoses: $availablePoses)
+                    destination: PoseSelectionView(availablePoses: $availablePoses, mode: .practice)
                 ) {
                     HStack {
                         Image(systemName: "figure.walk")
@@ -123,7 +115,7 @@ struct ContentView: View {
                 }
 
                 NavigationLink(
-                    destination: PoseLearnView(availablePoses: availablePoses)
+                    destination: PoseSelectionView(availablePoses: $availablePoses, mode: .learn)
                 ) {
                     HStack {
                         Image(systemName: "figure.mind.and.body")
@@ -139,7 +131,7 @@ struct ContentView: View {
                 }
 
                 NavigationLink(
-                    destination: FavoritesView(availablePoses: $availablePoses)
+                    destination: PoseSelectionView(availablePoses: $availablePoses, mode: .favorites)
                 ) {
                     HStack {
                         Image(systemName: "star.fill")
