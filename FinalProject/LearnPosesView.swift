@@ -10,12 +10,12 @@ struct LearnPosesView: View {
     @State private var appearAnimation: [Bool] = [false, false, false, false] // Multiple animation states
     @Environment(\.dismiss) private var dismiss
     
-    let poseDetails: [String: (text: String, video: String, image: String, level: String)] = [
-        "tree": ("Tree Pose helps improve balance and stability.", "tree", "treepose", "beginner"),
-        "downdog": ("Downward Dog stretches your back and strengthens your arms.", "downdog", "downdog", "beginner"),
-        "plank": ("Plank Pose builds core strength and stamina.", "plank", "plank", "beginner"),
-        "goddess": ("Goddess Pose strengthens your legs and opens your hips.", "goddess", "goddess", "intermediate"),
-        "warrior2": ("Warrior II builds strength and stability in the legs and core.", "warrior2", "warrior2", "beginner")
+    let poseDetails: [String: (text: String, video: String, image: String, level: YogaPose.Difficulty)] = [
+        "tree": ("Tree Pose helps improve balance and stability.", "tree", "treepose", .beginner),
+        "downdog": ("Downward Dog stretches your back and strengthens your arms.", "downdog", "downdog", .intermediate),
+        "plank": ("Plank Pose builds core strength and stamina.", "plank", "plank", .beginner),
+        "goddess": ("Goddess Pose strengthens your legs and opens your hips.", "goddess", "goddess", .advanced),
+        "warrior2": ("Warrior II builds strength and stability in the legs and core.", "warrior2", "warrior2", .intermediate)
     ]
     
     var body: some View {
@@ -184,19 +184,18 @@ struct LearnPosesView: View {
 }
 
 struct PoseLevelBadge: View {
-    let level: String
+    let level: YogaPose.Difficulty
     
     private var backgroundColor: Color {
-        switch level.lowercased() {
-        case "beginner": return .green
-        case "intermediate": return .orange
-        case "advanced": return .red
-        default: return .blue
+        switch level {
+        case .beginner: return .green
+        case .intermediate: return .orange
+        case .advanced: return .red
         }
     }
     
     var body: some View {
-        Text(level.capitalized)
+        Text(level.rawValue.capitalized)
             .font(.system(.subheadline, design: .rounded))
             .fontWeight(.medium)
             .foregroundColor(.white)

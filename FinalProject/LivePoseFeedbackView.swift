@@ -16,9 +16,9 @@ struct LivePoseFeedbackView: View {
     
     var body: some View {
         VStack {
-            Text(selectedPose.name)
-                .font(.headline)
-                .padding()
+            Text(selectedPose.name.capitalized)
+                            .font(.system(size: 30, weight: .bold))
+                            .padding()
             
             ZStack {
                 CameraPreview(captureSession: viewModel.captureSession)
