@@ -7,7 +7,7 @@ struct LearnPosesView: View {
     @State private var isVideoExpanded: Bool = true
     @State private var isDescriptionExpanded: Bool = true
     @State private var isFullScreen: Bool = false
-    @State private var appearAnimation: Bool = false
+    @State private var appearAnimation: [Bool] = [false, false, false, false] // Multiple animation states
     @Environment(\.dismiss) private var dismiss
     
     let poseDetails: [String: (text: String, video: String, image: String, level: String)] = [
@@ -48,7 +48,8 @@ struct LearnPosesView: View {
                                 .overlay(Circle().stroke(Color.white, lineWidth: 4))
                                 .shadow(radius: 10)
                                 .offset(y: geometry.size.width * 0.2)
-                                .opacity(appearAnimation ? 1 : 0)
+                                .opacity(appearAnimation[0] ? 1 : 0)
+                                .animation(.easeOut(duration: 0.5), value: appearAnimation[0])
                         }
                         .frame(width: geometry.size.width, height: geometry.size.width * 0.6)
                         
@@ -59,10 +60,12 @@ struct LearnPosesView: View {
                                 Text(selectedPose.name.capitalized)
                                     .font(.system(size: 32, weight: .bold, design: .rounded))
                                     .padding(.top, geometry.size.width * 0.25)
-                                    .opacity(appearAnimation ? 1 : 0)
+                                    .opacity(appearAnimation[1] ? 1 : 0)
+                                    .animation(.easeOut(duration: 0.5).delay(0.2), value: appearAnimation[1])
                                 
                                 PoseLevelBadge(level: details.level)
-                                    .opacity(appearAnimation ? 1 : 0)
+                                    .opacity(appearAnimation[1] ? 1 : 0)
+                                    .animation(.easeOut(duration: 0.5).delay(0.2), value: appearAnimation[1])
                             }
                             
                             // Video Section
@@ -95,7 +98,8 @@ struct LearnPosesView: View {
                                         .frame(height: min(geometry.size.width * 0.56, 220))
                                 }
                             }
-                            .opacity(appearAnimation ? 1 : 0)
+                            .opacity(appearAnimation[2] ? 1 : 0)
+                            .animation(.easeOut(duration: 0.5).delay(0.4), value: appearAnimation[2])
                             
                             // Instructions Section
                             VStack(spacing: 12) {
@@ -129,7 +133,8 @@ struct LearnPosesView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 16))
                                 .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
                             }
-                            .opacity(appearAnimation ? 1 : 0)
+                            .opacity(appearAnimation[3] ? 1 : 0)
+                            .animation(.easeOut(duration: 0.5).delay(0.6), value: appearAnimation[3])
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 30)
@@ -142,13 +147,20 @@ struct LearnPosesView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             setupVideo()
-            withAnimation {
-                appearAnimation = true
-            }
+            triggerAnimations()
         }
         .onDisappear {
             player?.pause()
             player = nil
+        }
+    }
+    
+    private func triggerAnimations() {
+        // Trigger animations sequentially
+        for index in 0..<appearAnimation.count {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.2) {
+                appearAnimation[index] = true
+            }
         }
     }
     
