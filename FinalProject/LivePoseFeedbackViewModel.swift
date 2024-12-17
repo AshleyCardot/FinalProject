@@ -88,7 +88,7 @@ class LivePoseFeedbackViewModel: NSObject, ObservableObject {
         setupCamera()
     }
     
-    private func setupCamera() {
+    func setupCamera() {
         guard isCameraAuthorized else { return }
         
         // Stop the session and remove existing inputs

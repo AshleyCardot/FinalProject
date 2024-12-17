@@ -94,6 +94,7 @@ struct LivePoseFeedbackView: View {
         .navigationTitle("Live Feedback")
         .alert("Need Help?", isPresented: $viewModel.showVideoPrompt) {
             Button("Watch Tutorial") {
+                viewModel.stopCamera() // Stop the camera before showing tutorial
                 showingVideoTutorial = true
                 viewModel.showVideoPrompt = false
             }
@@ -103,13 +104,14 @@ struct LivePoseFeedbackView: View {
         } message: {
             Text("Would you like to watch a video tutorial on how to do this pose correctly?")
         }
-        .fullScreenCover(isPresented: $showingVideoTutorial) {
-            NavigationView {
+        .sheet(isPresented: $showingVideoTutorial) {
+            NavigationStack {
                 LearnPosesView(selectedPose: selectedPose)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button("Done") {
                                 showingVideoTutorial = false
+                                viewModel.setupCamera() // Restart camera when returning
                             }
                         }
                     }
