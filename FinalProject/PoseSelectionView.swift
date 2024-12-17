@@ -11,6 +11,12 @@ struct PoseSelectionView: View {
         case favorites
     }
     
+    enum Difficulty: String {
+        case beginner
+        case intermediate
+        case advanced
+    }
+    
     private let poseImages: [String: String] = [
         "downdog": "downdog-preview",
         "goddess": "goddess-preview",
@@ -40,8 +46,8 @@ struct PoseSelectionView: View {
                            let uiImage = UIImage(named: imageName) ?? UIImage(contentsOfFile: Bundle.main.path(forResource: imageName, ofType: "jpg") ?? "") {
                             Image(uiImage: uiImage)
                                 .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(height: 150)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 250)
                                 .clipped()
                                 .cornerRadius(8)
                         } else {
@@ -66,7 +72,13 @@ struct PoseSelectionView: View {
                                     .padding(.vertical, 4)
                                     .background(
                                         Capsule()
-                                            .fill(pose.difficulty == .beginner ? Color.green.opacity(0.2) : Color.orange.opacity(0.2))
+                                            .fill({
+                                                switch pose.difficulty {
+                                                case .beginner: return Color.green.opacity(0.2)
+                                                case .intermediate: return Color.orange.opacity(0.2)
+                                                case .advanced: return Color.red.opacity(0.2)
+                                                }
+                                            }())
                                     )
                             }
                             

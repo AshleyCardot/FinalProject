@@ -6,7 +6,7 @@ struct ContentView: View {
             id: UUID(),
             name: "downdog",
             description: "A pose that stretches and strengthens the entire body",
-            difficulty: .beginner,
+            difficulty: .intermediate,
             instructions: [
                 "Start on hands and knees",
                 "Lift your knees off the floor",
@@ -22,7 +22,7 @@ struct ContentView: View {
             id: UUID(),
             name: "goddess",
             description: "A powerful standing pose that opens the hips",
-            difficulty: .intermediate,
+            difficulty: .advanced,
             instructions: [
                 "Step feet wide apart",
                 "Turn toes out 45 degrees",
@@ -70,7 +70,7 @@ struct ContentView: View {
             id: UUID(),
             name: "warrior2",
             description: "A standing pose that builds strength and stability",
-            difficulty: .beginner,
+            difficulty: .intermediate,
             instructions: [
                 "Step feet wide apart",
                 "Turn front foot out 90 degrees",
